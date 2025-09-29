@@ -6,13 +6,13 @@ from scipy.optimize import curve_fit
 from scipy.special import wofz
 from sklearn.metrics import mean_squared_error
 
-# Voigt function definition
+#voigt function definition
 def voigt(x, amplitude, center, sigma, gamma):
     """Voigt profile: Combination of Gaussian (sigma) and Lorentzian line shapes."""
     z = ((x - center) + 1j * gamma) / (sigma * np.sqrt(2))
     return amplitude * np.real(wofz(z)) / (sigma * np.sqrt(2 * np.pi))
 
-# Function to fit Voigt profile to a spectrum
+#function to fit voigt profile to a spectrum
 def fit_voigt(x, y, initial_center, initial_sigma=10, initial_gamma=10):
     """Fits a Voigt function to the given data."""
     p0 = [max(y), initial_center, initial_sigma, initial_gamma]
@@ -20,13 +20,13 @@ def fit_voigt(x, y, initial_center, initial_sigma=10, initial_gamma=10):
     popt, pcov = curve_fit(voigt, x, y, p0=p0, bounds=bounds)
     return popt, pcov
 
-# Baseline fitting function using polynomial regression
+#baseline fitting function using polynomial regression
 def fit_baseline(wavenumbers, intensities, degree=3, baseline_regions=None):
     """Fits a polynomial baseline and subtracts it."""
     if baseline_regions is None:
         baseline_regions = [(1660, 1670), (1730, 1740)]
 
-    # Select baseline points
+    #select baseline points
     mask = np.zeros_like(wavenumbers, dtype=bool)
     for region in baseline_regions:
         mask |= (wavenumbers >= region[0]) & (wavenumbers <= region[1])
@@ -34,31 +34,31 @@ def fit_baseline(wavenumbers, intensities, degree=3, baseline_regions=None):
     baseline_x = wavenumbers[mask]
     baseline_y = intensities[mask]
 
-    # Fit polynomial to baseline regions
+    #fit polynomial to baseline regions
     poly_coeffs = np.polyfit(baseline_x, baseline_y, deg=degree)
     baseline = np.polyval(poly_coeffs, wavenumbers)
 
-    # Subtract baseline
+    #subtract baseline
     corrected_intensities = intensities - baseline
 
     return corrected_intensities, baseline
 
-# Compute RMSE
+#compute RMSE
 def calculate_rmse(y_exp, y_fit):
     return np.sqrt(mean_squared_error(y_exp, y_fit))
 
-# Compute R² Score
+#compute R² Score
 def calculate_r2(y_exp, y_fit):
     ss_res = np.sum((y_exp - y_fit) ** 2)
     ss_tot = np.sum((y_exp - np.mean(y_exp)) ** 2)
     return 1 - (ss_res / ss_tot)
 
-# Main processing function
+#main processing function
 def process_and_store_results(file_names, peak_center_guess):
     """Fits Voigt profiles, plots results, and stores them in a NumPy array."""
     results = []
     
-    # Initialize lists for NumPy array
+    #initialize lists for NumPy array
     file_names_list = []
     amplitudes = []
     centers = []
@@ -71,25 +71,25 @@ def process_and_store_results(file_names, peak_center_guess):
         wavenumbers = data['Wavenumbers'].values
         intensities = data['Intensities'].values
 
-        # Fit and subtract baseline
+        #fit and subtract baseline
         corrected_intensities, baseline = fit_baseline(wavenumbers, intensities, degree=3)
 
-        # Select a region around the peak
+        #select a region around the peak
         region_mask = (wavenumbers > peak_center_guess - 50) & (wavenumbers < peak_center_guess + 50)
         region_wavenumbers = wavenumbers[region_mask]
         region_intensities = corrected_intensities[region_mask]  # Use baseline-corrected intensities
 
-        # Fit the Voigt function
+        #fit the Voigt function
         popt, pcov = fit_voigt(region_wavenumbers, region_intensities, peak_center_guess)
 
-        # Store in list for NumPy array
+        #store in list for NumPy array
         file_names_list.append(file_name)
         amplitudes.append(popt[0])
         centers.append(popt[1])
         sigmas.append(popt[2])
         gammas.append(popt[3])
 
-        # Store as dictionary for reference
+        #store as dictionary for reference
         results.append({
             'File': file_name,
             'Amplitude': popt[0],
@@ -99,11 +99,11 @@ def process_and_store_results(file_names, peak_center_guess):
             'Fit Parameters': popt
         })
 
-        # Generate fitted curve and residuals
+        #generate fitted curve and residuals
         fit_curve = voigt(region_wavenumbers, *popt)
         residuals = region_intensities - fit_curve
 
-        # Plot original spectrum and Voigt fit
+        #plot original spectrum and Voigt fit
         plt.figure(figsize=(10, 6))
         plt.plot(region_wavenumbers, region_intensities, label='Baseline Corrected Spectrum', color='blue')
         plt.plot(region_wavenumbers, fit_curve, linestyle='--', label='Voigt Fit', color='red')
@@ -118,7 +118,7 @@ def process_and_store_results(file_names, peak_center_guess):
         plt.tight_layout()
         plt.show()
 
-        # Plot residuals
+        #plot residuals
         plt.figure(figsize=(10, 4))
         plt.plot(region_wavenumbers, residuals, label='Residuals', color='purple')
         plt.axhline(0, color='gray', linestyle='--')
@@ -131,12 +131,12 @@ def process_and_store_results(file_names, peak_center_guess):
         plt.tight_layout()
         plt.show()
 
-    # Convert to structured NumPy array
+    #convert to structured NumPy array
     results_array = np.column_stack((amplitudes, centers, sigmas, gammas))
 
     return results, results_array
 
-# List of file names and peak center guess
+#list of file names and peak center guess
 file_names = [
     '0.CSV',
     '1.CSV',
@@ -153,10 +153,10 @@ file_names = [
 
 peak_center_guess = 1709  # Adjust based on expected peak location
 
-# Process spectra and create plots
+#process spectra and create plots
 fit_results, fit_array = process_and_store_results(file_names, peak_center_guess)
 
-# Display fit results
+#display fit results
 for result in fit_results:
     print(f"File: {result['File']}")
     print(f"  Amplitude: {result['Amplitude']:.4f}")
@@ -165,6 +165,6 @@ for result in fit_results:
     print(f"  Gamma (Lorentzian width): {result['Gamma (Lorentzian width)']:.4f}")
     print()
 
-# Check the NumPy array
+#check the NumPy array
 print("NumPy Array of Fitting Parameters:")
 print(fit_array)
