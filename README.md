@@ -36,6 +36,12 @@ The carbonyl peak position at each concentration is determined using Voigt peak 
 
 The QM training set is made up of ~1000 conformations of water surrounding a static acetone molecule (create_initial_geometries(G).ipynb)
 
+The QM training data was used without optimising the geometry, as optimisation shows to fall to a common relaxed structure not suitable to explain the carbonyl shift. Comparison of the optimised (relaxed) and single point (constrained) is shown below.
+
+![Comparing the energies of optimised (relaxed) and single point (constrained) geometries](./energy_comparison.png)
+
+![Highlighting the energy difference between optimised and single point geometries](./energy_difference.png)
+
 <p align="center">
   <img src="./angle_plot.png" alt="Water angles in training data" width="400"/>
   <img src="./distance_o1_to_water.png" alt="Distance from acetone oxygen to hydrogen" width="400"/>
