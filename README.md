@@ -40,8 +40,6 @@ The QM training data was used without optimising the geometry, as optimisation s
 
 ![Comparing the energies of optimised (relaxed) and single point (constrained) geometries](./energy_comparison.png)
 
-![Highlighting the energy difference between optimised and single point geometries](./energy_difference.png)
-
 <p align="center">
   <img src="./angle_plot.png" alt="Water angles in training data" width="400"/>
   <img src="./distance_o1_to_water.png" alt="Distance from acetone oxygen to hydrogen" width="400"/>
