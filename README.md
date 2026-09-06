@@ -34,22 +34,7 @@ Mixtures of acetone and water were prepared across a range of volume ratios from
 
 The carbonyl peak position at each concentration is determined using Voigt peak fitting (voigt_peak_centre.py) and the difference between the experimental peak and the QM calculated vibrations are used as to create the "delta matrix" the difference between the experimental values and the QM vibrations. 
 
-The QM training set is made up of ~1000 conformations of water surrounding a static acetone molecule (create_initial_geometries(G).ipynb)
-
-The QM training data was used without optimising the geometry, as optimisation shows to fall to a common relaxed structure not suitable to explain the carbonyl shift. Comparison of the optimised (relaxed) and single point (constrained) is shown below.
-
-![Comparing the energies of optimised (relaxed) and single point (constrained) geometries](./energy_comparison.png)
-
-<p align="center">
-  <img src="./angle_plot.png" alt="Water angles in training data" width="400"/>
-  <img src="./distance_o1_to_water.png" alt="Distance from acetone oxygen to hydrogen" width="400"/>
-</p>
-
-<p align="center">
-  Comparison of angle and distance dimensions created in the training data.
-</p>
-
-Quantum mechanical calculations were performed using Psi4 at the MP2 level of theory with the cc-pVDZ basis set. To generate the QM training data it took ~48 hours using a NVIDIA GeForce RTX 4060 with 8 GB. Each geometry underwent vibrational frequency analysis using no_com and no_reorient, the resulting dipole moments,energies, IR intensities, frequencies, and reduced masses were extracted as features for training (see run_QM.py) (coulomb_matrix_function.py).
+Quantum mechanical calculations were performed using PySCF (with GPU acceleration via gpu4pyscf) at the PBE0 level of theory with the def2-SVPD basis set, using density fitting for computational efficiency. Geometry optimizations were converged to a threshold of 1×10⁻⁸ Hartree over a maximum of 150 SCF cycles using a NVIDIA GeForce RTX 4060 with 8 GB. 
 
 Both supervised and unsupervised analysis methods where used to understand the structure and importance of the feature dataset using Principal Component Analysis (PCA) and XGBoost (feature_analysis.py)
 
