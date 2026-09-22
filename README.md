@@ -1,5 +1,5 @@
 
-# Spectroscopy to structure, prediction of acetone and water geometries using FTIR, QM and ML methods 
+# Spectroscopy to structure, prediction of acetone and water geometries using FTIR, Computational Chemistry and ML methods 
 
 # Project Overview
 This project combines Computational Chemistry, FTIR Spectroscopy, and Machine Learning to predict the distribution of water geometries around acetone from experimental FTIR data.
