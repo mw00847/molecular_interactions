@@ -26,9 +26,36 @@ template_folder=("MD/template")
 mol_fractions= [round(i * 0.1, 2) for i in range(1, 11)]
 
 """
-make these into a functions so it can only needs to be run once to make the folders
+function to calculate the volume of one molecule used in the system acetone/water
+function takes RMM and density (p) and avogadros constant (avo)
+
+p=mv , mole=mass/RMM , molecules=moles*avo
+
+RMM water = 18.015
+RMM acetone = 58.08
+
+p water = 0.997
+p acetone = 0.784
 
 """
+
+avo=6.02214076e23
+
+def calc_volume_of_one_molecule(RMM,p):
+    
+    num_mol=1/avo
+
+    mass=num_mol*RMM
+
+    #gromacs takes nm
+
+    vol=(mass/p)*1e21
+    return vol
+
+#using the function with the RMM and p inputs for the two molecules 
+V_WATER=calc_volume_of_one_molecule(18.015,0.997)
+V_ACETONE=calc_volume_of_one_molecule(58.08,0.784)
+
 
 #making folders of the mol fractions for simulation and the top file 
 
