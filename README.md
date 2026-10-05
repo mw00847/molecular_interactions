@@ -2,7 +2,7 @@
 # Spectroscopy to structure, prediction of acetone and water geometries using FTIR, Computational Chemistry and ML methods 
 
 # Project Overview
-This project combines Computational Chemistry, FTIR Spectroscopy, and Machine Learning to predict the distribution of water geometries around acetone from experimental FTIR data.
+This project combines Computational Chemistry, FTIR Spectroscopy, and Machine Learning to predict the distribution of water geometries around acetone from experimental FTIR data. Geometries of 1 water molecule around an acetone molecule converge to one discrete geometry.
 
 # Background
 Dilution of acetone with either water or carbon tetrachloride shifts the carbonyl band red or blue, respectively
